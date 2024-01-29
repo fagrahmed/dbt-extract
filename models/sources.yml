@@ -1,0 +1,22 @@
+version: 2
+
+sources:
+  # - name: axis_core
+  #   database: Ssot
+  #   tables:
+  #     - name: walletdetails
+  #     - name: transactiondetails
+        
+  - name: axis_sme
+    database: Ssot
+    tables:
+      - name: clients
+      - name: clientemployees
+      - name: disbursementtransactions
+      - name: bankpaymenttransactions
+      - name: bankpayments
+
+  # - name: public
+  #   tables:
+  #     - name: txn_proc_cost_table
+  #     - name: meeza_cost
