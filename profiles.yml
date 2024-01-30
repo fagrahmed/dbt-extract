@@ -4,7 +4,7 @@ config:
   send_anonymous_usage_stats: false
   use_colors: true
 
-yasser:
+dbt_extract:
   target: dev
   outputs:
     dev:
