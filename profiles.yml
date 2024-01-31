@@ -11,7 +11,7 @@ normalize:
       type: postgres
       host: 10.10.93.2
       port: 5432  # optional
-      database: 'Ssot' # optional, should be same as schema
-      schema: 'dbt'
+      database: 'dbt' # optional, should be same as schema
+      schema: 'dbt-dimensions'
       user: 'postgres'
       password: 'postgres'
