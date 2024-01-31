@@ -8,7 +8,7 @@ sources:
   #     - name: transactiondetails
         
   - name: axis_sme
-    database: Ssot
+    database: dbt
     tables:
       - name: clients
       - name: clientemployees
