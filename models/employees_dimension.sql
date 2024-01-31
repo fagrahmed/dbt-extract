@@ -4,7 +4,6 @@
 
 
 SELECT
-    uuid_generate_v4() as employee_key,
     c.clientid,
     c.clientname->>'en' as clientname,
     ce.mobilenumber as employee_mobile,
