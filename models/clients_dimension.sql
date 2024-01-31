@@ -4,7 +4,6 @@
 
 
 SELECT
-    uuid_generate_v4() as client_key,
     clientId,
     clientname->>'en' as clientname_en,
     clienttype,
