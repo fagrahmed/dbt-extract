@@ -5,7 +5,6 @@
 
 SELECT
     c.clientid,
-    c.clientname->>'en' as clientname,
     ce.mobilenumber as employee_mobile,
     ce.clientemployeeid as employee_id,
     ce.status as employee_status,
