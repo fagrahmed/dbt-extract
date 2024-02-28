@@ -11,7 +11,6 @@ SELECT
     (lastmodifiedat::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') AS client_modifiedat_utc2,
 
     status as client_status,
-    clientdetails
     industrytype,
     address->>'governorate' as address_governorate,
     address->>'city' as address_city,
