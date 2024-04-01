@@ -4,6 +4,7 @@
 
 
 SELECT
+    id SERIAL PRIMARY KEY,
     clientId,
     clientname->>'en' as clientname_en,
     clienttype,
