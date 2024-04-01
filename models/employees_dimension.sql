@@ -4,6 +4,7 @@
 
 
 SELECT
+    id SERIAL PRIMARY KEY,
     c.clientid,
     ce.mobilenumber as employee_mobile,
     ce.clientemployeeid as employee_id,
