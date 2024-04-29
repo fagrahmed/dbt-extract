@@ -17,6 +17,8 @@ SELECT
     address->>'city' as address_city,
     numofemployees,
     salaryadvanceaccesslevel,
+    bankpaymentwalletid,
+    walletpaymentwalletid,
 
     (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') as loaddate,
     null::timestamptz as expdate,
