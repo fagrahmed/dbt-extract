@@ -16,7 +16,13 @@ sources:
       - name: bankpaymenttransactions
       - name: bankpayments
 
-  # - name: public
-  #   tables:
-  #     - name: txn_proc_cost_table
-  #     - name: meeza_cost
+  - name: dbt-dimensions
+    tables:
+      - name: clients_dimension
+      - name: clients_stagging
+      - name: clients_stagging_2
+      - name: employees_dimension
+      - name: employees_stagging
+      - name: employees_stagging_2
+
+

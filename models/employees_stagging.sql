@@ -1,0 +1,45 @@
+
+{{ config(
+    materialized='incremental',
+    unique_key= ['employee_id', 'employee_mobile'],
+    on_schema_change='create',
+    pre_hook='TRUNCATE TABLE {{ this }}'
+)}}
+
+{% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'employees_dimension')" %}
+{% set table_exists_result = run_query(table_exists_query) %}
+{% set table_exists = table_exists_result.rows[0][0] if table_exists_result and table_exists_result.rows else False %}
+
+
+SELECT
+    md5(random()::text || clock_timestamp()::text) as unique_id,
+    'insert' AS operation,
+    true AS currentflag,
+    null::timestamptz AS expdate,    
+    c.clientid,
+    ce.mobilenumber as employee_mobile,
+    ce.clientemployeeid as employee_id,
+    md5(
+        COALESCE(ce.clientemployeeid, '') || '::' || COALESCE(ce.mobilenumber, '') || '::' || COALESCE(ce.status, '') || '::' ||
+        COALESCE(ce.address, '') || '::' || COALESCE(ce.clientid, '') || '::' || COALESCE(ce.fullname, '') || '::' ||
+        COALESCE(ce.nationalid, '') || '::' || COALESCE(ce.salarytype, '') || '::' || COALESCE(ce.salary_aibyte_transform, '') || '::' || 
+        COALESCE(ce.iseligibleforclaimrequest::text, '') || '::' || COALESCE(ce.iseligibleforadvancerequest::text, '') || '::' || COALESCE(ce.advancerequestrequiresapproval::text, '')
+    ) AS hash_column,
+    ce.status as employee_status,
+    (ce.createdat::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') as employee_createdat_utc2,
+    (ce.lastmodifiedat::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') as employee_lastmodifiedat_utc2,
+    (ce.deletedtime::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') as employee_deletedat_utc2,
+    ce.salarytype as employee_salarytype,
+    ce.tookfirstsalary,
+    ce.iseligibleforclaimrequest,
+    ce.iseligibleforadvancerequest,
+    ce.advancerequestrequiresapproval,
+    (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') AS loaddate
+
+
+FROM {{ source('axis_sme', 'clientemployees') }} ce
+LEFT JOIN {{ source('axis_sme', 'clients') }} c ON ce.clientid = c.clientid
+
+{% if is_incremental() and table_exists %}
+    WHERE ce._airbyte_emitted_at > COALESCE((SELECT max(loaddate::timestamptz) FROM {{ source('dbt-dimensions', 'employees_dimension') }}), '1900-01-01'::timestamp)
+{% endif %}
