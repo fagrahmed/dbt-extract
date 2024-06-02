@@ -30,8 +30,8 @@ with step_1 as (
         new_records.*
     from step_1 as new_records
     left join {{this}} as old_records
-        on new_records.unique_id = old_records.unique_id
-    where old_records.unique_id is null
+        on new_records.id = old_records.id
+    where old_records.id is null
 
 )
 {% endif %}
