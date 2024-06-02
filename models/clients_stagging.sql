@@ -2,8 +2,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['clientid'],
-    on_schema_change='create',
-    pre_hook='TRUNCATE TABLE {{ this }}'
+    on_schema_change='create'
 )}}
 
 {% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'clients_dimension')" %}
