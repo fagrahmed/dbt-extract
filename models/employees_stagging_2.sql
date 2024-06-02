@@ -14,7 +14,7 @@
 
 with update_old as (
     SELECT
-        stg.unique_id AS unique_id,
+        stg.id AS id,
         CASE
             WHEN final.hash_column IS NOT NULL AND final.hash_column = stg.hash_column AND final.operation = 'insert' THEN 'update'
             ELSE 'exp'
@@ -86,6 +86,7 @@ with update_old as (
     LEFT JOIN {{ source('dbt-dimensions', 'employees_dimension')}} final
         ON stg.employee_id = final.employee_id AND stg.employee_mobile = final.employee_mobile
     WHERE final.hash_column is not null and final.operation != 'exp'
+        AND stg.loaddate > final.loaddate
 )
 
 SELECT * from update_old
