@@ -11,7 +11,7 @@
 
 {% set stg_table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'employees_stagging')" %}
 {% set stg_table_exists_result = run_query(stg_table_exists_query) %}
-{% set stg_table_exists =stg_ table_exists_result.rows[0][0] if stg_table_exists_result and stg_table_exists_result.rows else False %}
+{% set stg_table_exists =stg_table_exists_result.rows[0][0] if stg_table_exists_result and stg_table_exists_result.rows else False %}
 
 
 SELECT
