@@ -1,8 +1,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['clientid'],
-    on_schema_change='create',
-    pre_hook='TRUNCATE TABLE {{ this }}'
+    on_schema_change='create'
 )}}
 
 {% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'clients_dimension')" %}
@@ -13,7 +12,7 @@
 
 with update_old as (
     SELECT
-        stg.unique_id AS unique_id,
+        stg.id AS id,
         CASE
             WHEN final.hash_column IS NOT NULL AND final.hash_column = stg.hash_column AND final.operation = 'insert' THEN 'update'
             ELSE 'exp'
@@ -80,32 +79,14 @@ with update_old as (
     LEFT JOIN {{ source('dbt-dimensions', 'clients_dimension')}} final
         ON stg.clientid = final.clientid 
     WHERE final.hash_column is not null and final.operation != 'exp'
+        AND stg.loaddate > final.loaddate
 )
 
 SELECT * from update_old
 
 {% else %}
 
-SELECT
-
-    stg.unique_id AS unique_id,
-    stg.operation AS operation,
-    stg.currentflag AS currentflag,
-    stg.expdate AS expdate,
-    stg.clientid AS clientid,
-    stg.hash_column AS hash_column,
-    stg.clientname_en AS clientname_en,
-    stg.clienttype AS clienttype,
-    stg.client_createdat_utc2 AS client_createdat_utc2,
-    stg.client_modifiedat_utc2 AS client_modifiedat_utc2,
-    stg.client_status AS client_status,
-    stg.industrytype AS industrytype,
-    stg.address_governorate AS address_governorate,
-    stg.address_city AS address_city,
-    stg.numofemployees AS numofemployees,
-    stg.salaryadvanceaccesslevel AS salaryadvanceaccesslevel,
-    (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') AS loaddate
-
+SELECT *
 FROM {{ source('dbt-dimensions', 'clients_stagging') }} stg
 WHERE stg.loaddate > '2050-01-01'::timestamptz
 
