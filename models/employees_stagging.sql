@@ -15,7 +15,7 @@
 
 
 SELECT
-    md5(random()::text || clock_timestamp()::text) as id,
+    md5(ce.clientemployeeid || '-' || now()::text) AS id,
     'insert' AS operation,
     true AS currentflag,
     null::timestamptz AS expdate,    
