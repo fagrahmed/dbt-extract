@@ -2,7 +2,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['clientid'],
-    on_schema_change='create'
+    on_schema_change='append_new_columns'
 )}}
 
 {% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'clients_dimension')" %}

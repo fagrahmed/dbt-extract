@@ -4,6 +4,7 @@
     config(
         materialized="incremental",
         unique_key= "hash_column",
+        on_schema_change='append_new_columns',
         post_hook="
             DROP TABLE IF EXISTS clients_stagging;
             DROP TABLE IF EXISTS clients_stagging_2;
