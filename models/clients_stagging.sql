@@ -14,7 +14,7 @@
 {% set stg_table_exists = stg_table_exists_result.rows[0][0] if stg_table_exists_result and stg_table_exists_result.rows else False %}
 
 SELECT
-    md5(random()::text || '-' || COALESCE(clientid, '') || '-' || COALESCE(clientcode, '') || '-' || COALESCE(ce.lastmodifiedat::text, '') || '-' || now()::text) AS id,  
+    md5(random()::text || '-' || COALESCE(clientid, '') || '-' || COALESCE(clientcode, '') || '-' || COALESCE(lastmodifiedat::text, '') || '-' || now()::text) AS id,  
     'insert' AS operation,
     true AS currentflag,
     null::timestamptz AS expdate,      
