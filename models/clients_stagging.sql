@@ -14,7 +14,7 @@
 {% set stg_table_exists = stg_table_exists_result.rows[0][0] if stg_table_exists_result and stg_table_exists_result.rows else False %}
 
 SELECT
-    md5(random()::text || clock_timestamp()::text) as id,  
+    uuid_generate_v7() as id,  
     'insert' AS operation,
     true AS currentflag,
     null::timestamptz AS expdate,      
