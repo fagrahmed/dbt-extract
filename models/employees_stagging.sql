@@ -15,7 +15,7 @@
 
 
 SELECT
-    md5(random()::text || '-' || COALESCE(ce.clientid, '') || '-' || COALESCE(ce.lastmodifiedat::text, '') || '-' || now()::text)::uuid AS id,
+    md5(random()::text || '-' || COALESCE(ce.clientid, '') || '-' || COALESCE(ce.lastmodifiedat::text, '') || '-' || now()::text) AS id,
     'insert' AS operation,
     true AS currentflag,
     null::timestamptz AS expdate,    
