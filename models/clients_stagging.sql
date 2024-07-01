@@ -39,7 +39,7 @@ SELECT
     salaryadvanceaccesslevel,
     (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') as loaddate
 
-FROM {{source('axis_sme', 'clients') }} src
+FROM {{source('axis_sme', '_airbyte_raw_clients') }} src
 
 {% if is_incremental() and table_exists and stg_table_exists %}
     WHERE src._airbyte_emitted_at > COALESCE((SELECT max(loaddate::timestamptz) FROM {{ source('dbt-dimensions', 'clients_dimension') }}), '1900-01-01'::timestamp)
