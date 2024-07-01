@@ -10,11 +10,11 @@ sources:
   - name: axis_sme
     # database: dbt
     tables:
-      - name: clients
-      - name: clientemployees
-      - name: disbursementtransactions
-      - name: bankpaymenttransactions
-      - name: bankpayments
+      - name: _airbyte_raw_clients
+      - name: _airbyte_raw_clientemployees
+      - name: _airbyte_raw_disbursementtransactions
+      - name: _airbyte_raw_bankpaymenttransactions
+      - name: _airbyte_raw_bankpayments
 
   - name: dbt-dimensions
     tables:
