@@ -6,22 +6,22 @@
         unique_key= "hash_column",
         on_schema_change='append_new_columns',
         post_hook="
-            DROP TABLE IF EXISTS employees_stagging;
-            DROP TABLE IF EXISTS employees_stagging_2;
+            DROP TABLE IF EXISTS inc_employees_stagging;
+            DROP TABLE IF EXISTS inc_employees_stagging_2;
             "
     )
 }}
 
 with step_1 as (
     select stg.*
-    from {{ ref("employees_stagging") }} stg 
-    left join {{ ref("employees_stagging_2")}} stg2 on stg.hash_column = stg2.hash_column
+    from {{ ref("inc_employees_stagging") }} stg 
+    left join {{ ref("inc_employees_stagging_2")}} stg2 on stg.hash_column = stg2.hash_column
     where stg2.hash_column is null
 
     union 
 
     select *
-    from {{ref("employees_stagging_2")}}
+    from {{ref("inc_employees_stagging_2")}}
 )
 
 {%if is_incremental() %}
