@@ -1,14 +1,8 @@
 version: 2
 
 sources:
-  # - name: axis_core
-  #   database: Ssot
-  #   tables:
-  #     - name: walletdetails
-  #     - name: transactiondetails
         
   - name: axis_sme
-    # database: dbt
     tables:
       - name: clients
       - name: clientemployees
@@ -18,11 +12,11 @@ sources:
 
   - name: dbt-dimensions
     tables:
-      - name: clients_dimension
-      - name: clients_stagging
-      - name: clients_stagging_2
-      - name: employees_dimension
-      - name: employees_stagging
-      - name: employees_stagging_2
+      - name: inc_clients_dimension
+      - name: inc_clients_stagging
+      - name: inc_clients_stagging_2
+      - name: inc_employees_dimension
+      - name: inc_employees_stagging
+      - name: inc_employees_stagging_2
 
 
