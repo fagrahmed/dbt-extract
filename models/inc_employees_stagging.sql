@@ -5,11 +5,11 @@
     on_schema_change='append_new_columns'
 )}}
 
-{% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'employees_dimension')" %}
+{% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'inc_employees_dimension')" %}
 {% set table_exists_result = run_query(table_exists_query) %}
 {% set table_exists = table_exists_result.rows[0][0] if table_exists_result and table_exists_result.rows else False %}
 
-{% set stg_table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'employees_stagging')" %}
+{% set stg_table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'inc_employees_stagging')" %}
 {% set stg_table_exists_result = run_query(stg_table_exists_query) %}
 {% set stg_table_exists =stg_table_exists_result.rows[0][0] if stg_table_exists_result and stg_table_exists_result.rows else False %}
 
@@ -44,5 +44,5 @@ FROM {{ source('axis_sme', 'clientemployees') }} ce
 LEFT JOIN {{ source('axis_sme', 'clients') }} c ON ce.clientid = c.clientid
 
 {% if is_incremental() and table_exists and stg_table_exists %}
-    WHERE ce._airbyte_emitted_at > COALESCE((SELECT max(loaddate::timestamptz) FROM {{ source('dbt-dimensions', 'employees_dimension') }}), '1900-01-01'::timestamp)
+    WHERE ce._airbyte_emitted_at > COALESCE((SELECT max(loaddate::timestamptz) FROM {{ source('dbt-dimensions', 'inc_employees_dimension') }}), '1900-01-01'::timestamp)
 {% endif %}
