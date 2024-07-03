@@ -4,7 +4,7 @@
     on_schema_change='create'
 )}}
 
-{% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'clients_dimension')" %}
+{% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'inc_clients_dimension')" %}
 {% set table_exists_result = run_query(table_exists_query) %}
 {% set table_exists = table_exists_result.rows[0][0] if table_exists_result and table_exists_result.rows else False %}
 
@@ -75,8 +75,8 @@ with update_old as (
         END AS salaryadvanceaccesslevel,
         (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '2 hours') AS loaddate  
 
-    FROM {{ source('dbt-dimensions', 'clients_stagging') }} stg
-    LEFT JOIN {{ source('dbt-dimensions', 'clients_dimension')}} final
+    FROM {{ source('dbt-dimensions', 'inc_clients_stagging') }} stg
+    LEFT JOIN {{ source('dbt-dimensions', 'inc_clients_dimension')}} final
         ON stg.clientid = final.clientid 
     WHERE final.hash_column is not null and final.operation != 'exp'
         AND stg.loaddate > final.loaddate
@@ -87,7 +87,7 @@ SELECT * from update_old
 {% else %}
 
 SELECT *
-FROM {{ source('dbt-dimensions', 'clients_stagging') }} stg
+FROM {{ source('dbt-dimensions', 'inc_clients_stagging') }} stg
 WHERE stg.loaddate > '2050-01-01'::timestamptz
 
 {% endif %}
