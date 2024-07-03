@@ -1,5 +1,5 @@
 models:
-  - name: employees_stagging
+  - name: inc_employees_stagging
     config:
       contract:
         enforced: true
@@ -45,7 +45,7 @@ models:
         data_type: BOOLEAN
 
 
-  - name: employees_dimension
+  - name: inc_employees_dimension
     config:
       contract:
         enforced: true
@@ -90,7 +90,7 @@ models:
       - name: tookfirstsalary
         data_type: BOOLEAN
           
-  - name: clients_stagging
+  - name: inc_clients_stagging
     config:
       contract:
         enforced: true
@@ -134,7 +134,7 @@ models:
         data_type: TEXT
 
           
-  - name: clients_dimension
+  - name: inc_clients_dimension
     config:
       contract:
         enforced: true
