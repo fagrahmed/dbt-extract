@@ -1,42 +1,159 @@
 
-
 {{
     config(
         materialized="incremental",
         unique_key= "hash_column",
-        on_schema_change='append_new_columns',
-        post_hook="
-            DROP TABLE IF EXISTS inc_clients_stagging;
-            DROP TABLE IF EXISTS inc_clients_stagging_2;
-            "
+        on_schema_change='append_new_columns'
     )
 }}
 
-with step_1 as (
-    select stg.*
-    from {{ ref("inc_clients_stagging") }} stg
-    left join {{ ref("inc_clients_stagging_2")}} stg2 on stg.hash_column = stg2.hash_column
-    where stg2.hash_column is null
+{% set table_exists_query = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'dbt-dimensions' AND table_name = 'inc_clients_dimension')" %}
+{% set table_exists_result = run_query(table_exists_query) %}
+{% set table_exists = table_exists_result.rows[0][0] if table_exists_result and table_exists_result.rows else False %}
 
-    union 
 
-    select *
-    from {{ref("inc_clients_stagging_2")}}
+WITH upd_exp_rec AS (
+
+    SELECT 
+        id,  
+        operation,
+        currentflag,
+        expdate,      
+        clientId,    
+        hash_column,
+        clientname_en,
+        clienttype,
+        client_createdat_local,
+        client_modifiedat_local,
+        utc,
+        client_status,
+        industrytype,
+        address_governorate,
+        address_city,
+        numofemployees,
+        salaryadvanceaccesslevel,
+        loaddate
+
+    FROM {{ ref("inc_clients_stg_update") }} stg
+
+    UNION ALL
+
+    SELECT 
+        id,  
+        operation,
+        currentflag,
+        expdate,      
+        clientId,    
+        hash_column,
+        clientname_en,
+        clienttype,
+        client_createdat_local,
+        client_modifiedat_local,
+        utc,
+        client_status,
+        industrytype,
+        address_governorate,
+        address_city,
+        numofemployees,
+        salaryadvanceaccesslevel,
+        loaddate
+
+    FROM {{ ref("inc_clients_stg_exp") }} 
 )
 
-{%if is_incremental() %}
-/* Exclude records that already exist in the destination table */
-, step_2 as(
-    select 
-        new_records.*
-    from step_1 as new_records
-    left join {{this}} as old_records
-        on new_records.id = old_records.id
-    where old_records.id is null
+{% if table_exists %}
+, remove_old_from_dim AS (
+    SELECT
+        old_rec.id,
+        old_rec.operation,
+        old_rec.currentflag,
+        old_rec.expdate,
+        old_rec.clientId,
+        old_rec.hash_column,
+        old_rec.clientname_en,
+        old_rec.clienttype,
+        old_rec.client_createdat_local,
+        old_rec.client_modifiedat_local,
+        old_rec.utc,
+        old_rec.client_status,
+        old_rec.industrytype,
+        old_rec.address_governorate,
+        old_rec.address_city,
+        old_rec.numofemployees,
+        old_rec.salaryadvanceaccesslevel,
+        old_rec.loaddate
 
+    FROM {{ this }} AS old_rec
+    LEFT JOIN upd_exp_rec ON old_rec.id = upd_exp_rec.id
+    WHERE upd_exp_rec.id IS NULL
 )
+
+SELECT
+    id,
+    operation,
+    currentflag,
+    expdate,
+    clientId,
+    hash_column,
+    clientname_en,
+    clienttype,
+    client_createdat_local,
+    client_modifiedat_local,
+    client_status,
+    industrytype,
+    address_governorate,
+    address_city,
+    numofemployees,
+    salaryadvanceaccesslevel,
+    loaddate
+
+FROM remove_old_from_dim
+
+UNION ALL
+
+SELECT 
+    id,
+    operation,
+    currentflag,
+    expdate,
+    clientId,
+    hash_column,
+    clientname_en,
+    clienttype,
+    client_createdat_local,
+    client_modifiedat_local,
+    utc,
+    client_status,
+    industrytype,
+    address_governorate,
+    address_city,
+    numofemployees,
+    salaryadvanceaccesslevel,
+    loaddate
+
+FROM upd_exp_rec
+
 {% endif %}
 
-select *
-from {% if is_incremental() %} step_2 {% else %} step_1 {% endif %}
-order by loaddate
+SELECT
+    id,
+    operation,
+    currentflag,
+    expdate,
+    clientId,
+    hash_column,
+    clientname_en,
+    clienttype,
+    client_createdat_local,
+    client_modifiedat_local,
+    utc,
+    client_status,
+    industrytype,
+    address_governorate,
+    address_city,
+    numofemployees,
+    salaryadvanceaccesslevel,
+    loaddate
+
+FROM {{ref("inc_clients_stg_new")}}
+

@@ -1,5 +1,5 @@
 models:
-  - name: inc_employees_stagging
+  - name: inc_employees_stg
     config:
       contract:
         enforced: true
@@ -15,14 +15,16 @@ models:
         data_type: TEXT
       - name: currentflag
         data_type: BOOLEAN
-      - name: employee_createdat_utc2
+      - name: employee_createdat_local
         data_type: TIMESTAMP
-      - name: employee_deletedat_utc2
+      - name: employee_deletedat_local
         data_type: TIMESTAMP
-      - name: employee_id
+      - name: employeeid
         data_type: TEXT
-      - name: employee_lastmodifiedat_utc2
+      - name: employee_modifiedat_local
         data_type: TIMESTAMP
+      - name: utc
+        data_type: int
       - name: employee_mobile
         data_type: TEXT
       - name: employee_salarytype
@@ -44,6 +46,146 @@ models:
       - name: tookfirstsalary
         data_type: BOOLEAN
 
+  - name: inc_employees_stg_new
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: text
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: advancerequestrequiresapproval
+        data_type: BOOLEAN
+      - name: clientid
+        data_type: TEXT
+      - name: currentflag
+        data_type: BOOLEAN
+      - name: employee_createdat_local
+        data_type: TIMESTAMP
+      - name: employee_deletedat_local
+        data_type: TIMESTAMP
+      - name: employeeid
+        data_type: TEXT
+      - name: employee_modifiedat_local
+        data_type: TIMESTAMP
+      - name: utc
+        data_type: int
+      - name: employee_mobile
+        data_type: TEXT
+      - name: employee_salarytype
+        data_type: TEXT
+      - name: employee_status
+        data_type: TEXT
+      - name: expdate
+        data_type: TIMESTAMPTZ
+      - name: hash_column
+        data_type: TEXT
+      - name: iseligibleforadvancerequest
+        data_type: BOOLEAN
+      - name: iseligibleforclaimrequest
+        data_type: BOOLEAN
+      - name: loaddate
+        data_type: TIMESTAMP
+      - name: operation
+        data_type: TEXT
+      - name: tookfirstsalary
+        data_type: BOOLEAN
+
+  - name: inc_employees_stg_update
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: text
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: advancerequestrequiresapproval
+        data_type: BOOLEAN
+      - name: clientid
+        data_type: TEXT
+      - name: currentflag
+        data_type: BOOLEAN
+      - name: employee_createdat_local
+        data_type: TIMESTAMP
+      - name: employee_deletedat_local
+        data_type: TIMESTAMP
+      - name: employeeid
+        data_type: TEXT
+      - name: employee_modifiedat_local
+        data_type: TIMESTAMP
+      - name: utc
+        data_type: int
+      - name: employee_mobile
+        data_type: TEXT
+      - name: employee_salarytype
+        data_type: TEXT
+      - name: employee_status
+        data_type: TEXT
+      - name: expdate
+        data_type: TIMESTAMPTZ
+      - name: hash_column
+        data_type: TEXT
+      - name: iseligibleforadvancerequest
+        data_type: BOOLEAN
+      - name: iseligibleforclaimrequest
+        data_type: BOOLEAN
+      - name: loaddate
+        data_type: TIMESTAMP
+      - name: operation
+        data_type: TEXT
+      - name: tookfirstsalary
+        data_type: BOOLEAN
+
+  - name: inc_employees_stg_exp
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: text
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: advancerequestrequiresapproval
+        data_type: BOOLEAN
+      - name: clientid
+        data_type: TEXT
+      - name: currentflag
+        data_type: BOOLEAN
+      - name: employee_createdat_local
+        data_type: TIMESTAMP
+      - name: employee_deletedat_local
+        data_type: TIMESTAMP
+      - name: employeeid
+        data_type: TEXT
+      - name: employee_modifiedat_local
+        data_type: TIMESTAMP
+      - name: utc
+        data_type: int
+      - name: employee_mobile
+        data_type: TEXT
+      - name: employee_salarytype
+        data_type: TEXT
+      - name: employee_status
+        data_type: TEXT
+      - name: expdate
+        data_type: TIMESTAMPTZ
+      - name: hash_column
+        data_type: TEXT
+      - name: iseligibleforadvancerequest
+        data_type: BOOLEAN
+      - name: iseligibleforclaimrequest
+        data_type: BOOLEAN
+      - name: loaddate
+        data_type: TIMESTAMP
+      - name: operation
+        data_type: TEXT
+      - name: tookfirstsalary
+        data_type: BOOLEAN
 
   - name: inc_employees_dimension
     config:
@@ -61,14 +203,16 @@ models:
         data_type: TEXT
       - name: currentflag
         data_type: BOOLEAN
-      - name: employee_createdat_utc2
+      - name: employee_createdat_local
         data_type: TIMESTAMP
-      - name: employee_deletedat_utc2
+      - name: employee_deletedat_local
         data_type: TIMESTAMP
-      - name: employee_id
+      - name: employeeid
         data_type: TEXT
-      - name: employee_lastmodifiedat_utc2
+      - name: employee_modifiedat_local
         data_type: TIMESTAMP
+      - name: utc
+        data_type: int
       - name: employee_mobile
         data_type: TEXT
       - name: employee_salarytype
@@ -90,7 +234,7 @@ models:
       - name: tookfirstsalary
         data_type: BOOLEAN
           
-  - name: inc_clients_stagging
+  - name: inc_clients_stg
     config:
       contract:
         enforced: true
@@ -116,10 +260,12 @@ models:
         data_type: TEXT
       - name: address_governorate
         data_type: TEXT
-      - name: client_createdat_utc2
+      - name: client_createdat_local
         data_type: TIMESTAMP
-      - name: client_modifiedat_utc2
+      - name: client_modifiedat_local
         data_type: TIMESTAMP
+      - name: utc
+        data_type: int
       - name: client_status
         data_type: TEXT
       - name: clientname_en
@@ -133,7 +279,141 @@ models:
       - name: salaryadvanceaccesslevel
         data_type: TEXT
 
-          
+  - name: inc_clients_stg_new
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: text
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: operation
+        data_type: TEXT
+      - name: currentflag
+        data_type: BOOLEAN
+      - name: expdate
+        data_type: TIMESTAMPTZ
+      - name: clientid
+        data_type: TEXT
+      - name: hash_column
+        data_type: TEXT
+      - name: loaddate
+        data_type: TIMESTAMP
+      - name: address_city
+        data_type: TEXT
+      - name: address_governorate
+        data_type: TEXT
+      - name: client_createdat_local
+        data_type: TIMESTAMP
+      - name: client_modifiedat_local
+        data_type: TIMESTAMP
+      - name: utc
+        data_type: int
+      - name: client_status
+        data_type: TEXT
+      - name: clientname_en
+        data_type: TEXT
+      - name: clienttype
+        data_type: TEXT
+      - name: industrytype
+        data_type: TEXT
+      - name: numofemployees
+        data_type: FLOAT
+      - name: salaryadvanceaccesslevel
+        data_type: TEXT
+
+  - name: inc_clients_stg_update
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: text
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: operation
+        data_type: TEXT
+      - name: currentflag
+        data_type: BOOLEAN
+      - name: expdate
+        data_type: TIMESTAMPTZ
+      - name: clientid
+        data_type: TEXT
+      - name: hash_column
+        data_type: TEXT
+      - name: loaddate
+        data_type: TIMESTAMP
+      - name: address_city
+        data_type: TEXT
+      - name: address_governorate
+        data_type: TEXT
+      - name: client_createdat_local
+        data_type: TIMESTAMP
+      - name: client_modifiedat_local
+        data_type: TIMESTAMP
+      - name: utc
+        data_type: int
+      - name: client_status
+        data_type: TEXT
+      - name: clientname_en
+        data_type: TEXT
+      - name: clienttype
+        data_type: TEXT
+      - name: industrytype
+        data_type: TEXT
+      - name: numofemployees
+        data_type: FLOAT
+      - name: salaryadvanceaccesslevel
+        data_type: TEXT
+
+  - name: inc_clients_stg_exp
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: id
+        data_type: text
+        constraints:
+          - type: not_null
+          - type: primary_key
+      - name: operation
+        data_type: TEXT
+      - name: currentflag
+        data_type: BOOLEAN
+      - name: expdate
+        data_type: TIMESTAMPTZ
+      - name: clientid
+        data_type: TEXT
+      - name: hash_column
+        data_type: TEXT
+      - name: loaddate
+        data_type: TIMESTAMP
+      - name: address_city
+        data_type: TEXT
+      - name: address_governorate
+        data_type: TEXT
+      - name: client_createdat_local
+        data_type: TIMESTAMP
+      - name: client_modifiedat_local
+        data_type: TIMESTAMP
+      - name: utc
+        data_type: int
+      - name: client_status
+        data_type: TEXT
+      - name: clientname_en
+        data_type: TEXT
+      - name: clienttype
+        data_type: TEXT
+      - name: industrytype
+        data_type: TEXT
+      - name: numofemployees
+        data_type: FLOAT
+      - name: salaryadvanceaccesslevel
+        data_type: TEXT
+
   - name: inc_clients_dimension
     config:
       contract:
@@ -160,10 +440,12 @@ models:
         data_type: TEXT
       - name: address_governorate
         data_type: TEXT
-      - name: client_createdat_utc2
+      - name: client_createdat_local
         data_type: TIMESTAMP
-      - name: client_modifiedat_utc2
+      - name: client_modifiedat_local
         data_type: TIMESTAMP
+      - name: utc
+        data_type: int
       - name: client_status
         data_type: TEXT
       - name: clientname_en

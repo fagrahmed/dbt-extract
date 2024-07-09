@@ -13,10 +13,15 @@ sources:
   - name: dbt-dimensions
     tables:
       - name: inc_clients_dimension
-      - name: inc_clients_stagging
-      - name: inc_clients_stagging_2
+      - name: inc_clients_stg
+      - name: inc_clients_stg_new
+      - name: inc_clients_stg_update
+      - name: inc_clients_stg_exp
+
       - name: inc_employees_dimension
-      - name: inc_employees_stagging
-      - name: inc_employees_stagging_2
+      - name: inc_employees_stg
+      - name: inc_employees_stg_new
+      - name: inc_employees_stg_update
+      - name: inc_employees_stg_exp
 
 
