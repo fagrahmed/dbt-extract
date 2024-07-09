@@ -99,6 +99,7 @@ SELECT
     clienttype,
     client_createdat_local,
     client_modifiedat_local,
+    utc,
     client_status,
     industrytype,
     address_governorate,
