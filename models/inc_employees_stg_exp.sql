@@ -4,7 +4,7 @@
     unique_key= ['employeeid', 'employee_mobile'],
     on_schema_change='append_new_columns',
     pre_hook=[
-        "{% if target.schema == 'dbt-dimensions' and source('dbt-dimensions', 'inc_employees_stg_exp') is not none %}TRUNCATE TABLE {{ source('dbt-dimensions', 'inc_employees_stg_exps') }};{% endif %}"
+        "{% if target.schema == 'dbt-dimensions' and source('dbt-dimensions', 'inc_employees_stg_exp') is not none %}TRUNCATE TABLE {{ source('dbt-dimensions', 'inc_employees_stg_exp') }};{% endif %}"
     ]
 )}}
 
