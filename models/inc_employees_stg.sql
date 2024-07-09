@@ -1,7 +1,7 @@
 
 {{ config(
     materialized='incremental',
-    unique_key= ['employee_id', 'employee_mobile'],
+    unique_key= ['employeeid', 'employee_mobile'],
     on_schema_change='append_new_columns'
 )}}
 

@@ -40,8 +40,8 @@ SELECT
     stg.loaddate
 
 FROM {{ source('dbt-dimensions', 'inc_employees_stg') }} stg
-LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension') }} dim on stg.employee_id = dim.employee_id
-WHERE dim.employee_id is null
+LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension') }} dim on stg.employeeid = dim.employeeid
+WHERE dim.employeeid is null
 
 {% else %}
 

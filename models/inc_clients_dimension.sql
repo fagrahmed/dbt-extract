@@ -133,6 +133,8 @@ SELECT
 
 FROM upd_exp_rec
 
+UNION ALL
+
 {% endif %}
 
 SELECT
