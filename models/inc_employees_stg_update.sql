@@ -38,7 +38,7 @@ WITH update_old AS (
 
     FROM {{ source('dbt-dimensions', 'inc_employees_stg') }} stg
     LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension')}} final
-        ON stg.employee_id = final.employee_id 
+        ON stg.employeeid = final.employeeid 
     WHERE final.hash_column IS NOT NULL AND final.hash_column = stg.hash_column AND final.operation != 'exp'
         AND stg.loaddate > final.loaddate 
 )

@@ -33,7 +33,7 @@ SELECT
     stg.iseligibleforclaimrequest,
     stg.iseligibleforadvancerequest,
     stg.advancerequestrequiresapproval,
-    (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '3 hours')
+    (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '3 hours') AS loaddate
 
 FROM {{ source('dbt-dimensions', 'inc_employees_stg') }} stg
 LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension')}} final
