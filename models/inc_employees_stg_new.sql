@@ -49,7 +49,7 @@ SELECT
     stg.expdate,    
     stg.clientid,
     stg.employee_mobile,
-    stg.employee_id,
+    stg.employeeid,
     stg.hash_column,
     stg.employee_status,
     stg.employee_createdat_local,

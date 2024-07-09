@@ -40,6 +40,8 @@ SELECT
 
 {% else %}
 
+SELECT
+
     stg.id,  
     stg.operation,
     stg.currentflag,
