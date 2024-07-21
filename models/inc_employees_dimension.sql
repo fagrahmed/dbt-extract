@@ -17,7 +17,6 @@
 {% set _ = ref('inc_employees_stg_update') %}
 {% set _ = ref('inc_employees_stg_exp') %}
 {% set _ = ref('inc_employees_stg_new') %}
-{% set _ = ref('inc_employees_stg_no_change') %}
 {% set _ = ref('inc_employees_stg') %}
 
 SELECT
