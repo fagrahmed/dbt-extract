@@ -18,19 +18,19 @@ SELECT
     'exp' AS operation,
     false AS currentflag,
     (now()::timestamp AT TIME ZONE 'UTC' + INTERVAL '3 hours') AS expdate,
-    stg.clientId,    
-    stg.hash_column,
-    stg.clientname_en,
-    stg.clienttype,
-    stg.client_createdat_local,
-    stg.client_modifiedat_local,
-    stg.utc,
-    stg.client_status,
-    stg.industrytype,
-    stg.address_governorate,
-    stg.address_city,
-    stg.numofemployees,
-    stg.salaryadvanceaccesslevel,
+    final.clientId,    
+    final.hash_column,
+    final.clientname_en,
+    final.clienttype,
+    final.client_createdat_local,
+    final.client_modifiedat_local,
+    final.utc,
+    final.client_status,
+    final.industrytype,
+    final.address_governorate,
+    final.address_city,
+    final.numofemployees,
+    final.salaryadvanceaccesslevel,
     (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '3 hours') AS loaddate  
 
 FROM {{ source('dbt-dimensions', 'inc_clients_stg') }} stg
@@ -39,6 +39,8 @@ LEFT JOIN {{ source('dbt-dimensions', 'inc_clients_dimension')}} final
 WHERE stg.loaddate > final.loaddate AND final.hash_column != stg.hash_column 
 
 {% else %}
+
+-- do nothing (extremely high comparison date)
 
 SELECT 
     stg.id,  
