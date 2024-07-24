@@ -2,6 +2,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['employeeid', 'employee_mobile'],
+    depends_on=['inc_employees_stg'],
     on_schema_change='append_new_columns',
     pre_hook=[
         "{% if target.schema == 'dbt-dimensions' and source('dbt-dimensions', 'inc_employees_stg_new') is not none %}TRUNCATE TABLE {{ source('dbt-dimensions', 'inc_employees_stg_new') }};{% endif %}"
@@ -41,9 +42,10 @@ SELECT
 
 FROM {{ source('dbt-dimensions', 'inc_employees_stg') }} stg
 LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension') }} dim on stg.employeeid = dim.employeeid
-WHERE dim.employeeid is null
+WHERE dim.employeeid is null OR (dim.hash_column != stg.hash_column AND dim.currentflag = true)
 
 {% else %}
+-- dimension doesnt exists so all is new
 
 SELECT
     stg.id,

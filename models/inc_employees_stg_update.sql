@@ -2,6 +2,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['employeeid', 'employee_mobile'],
+    depends_on=['inc_employees_stg'],
     on_schema_change='append_new_columns',
     pre_hook=[
         "{% if target.schema == 'dbt-dimensions' and source('dbt-dimensions', 'inc_employees_stg_update') is not none %}TRUNCATE TABLE {{ source('dbt-dimensions', 'inc_employees_stg_update') }};{% endif %}"
@@ -14,36 +15,33 @@
 
 {% if table_exists %}
 
-WITH update_old AS (
-    SELECT
-        final.id,
-        'update' AS operation,
-        true AS currentflag,
-        null::timestamptz AS expdate,
-        stg.clientid,
-        stg.employee_mobile,
-        stg.employeeid,
-        stg.hash_column,
-        stg.employee_status,
-        stg.employee_createdat_local,
-        stg.employee_modifiedat_local,
-        stg.employee_deletedat_local,
-        stg.utc,
-        stg.employee_salarytype,
-        stg.tookfirstsalary,
-        stg.iseligibleforclaimrequest,
-        stg.iseligibleforadvancerequest,
-        stg.advancerequestrequiresapproval,
-        (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '3 hours') AS loaddate 
+SELECT
+    final.id,
+    'update' AS operation,
+    true AS currentflag,
+    null::timestamptz AS expdate,
+    stg.clientid,
+    stg.employee_mobile,
+    stg.employeeid,
+    stg.hash_column,
+    stg.employee_status,
+    stg.employee_createdat_local,
+    stg.employee_modifiedat_local,
+    stg.employee_deletedat_local,
+    stg.utc,
+    stg.employee_salarytype,
+    stg.tookfirstsalary,
+    stg.iseligibleforclaimrequest,
+    stg.iseligibleforadvancerequest,
+    stg.advancerequestrequiresapproval,
+    (now()::timestamptz AT TIME ZONE 'UTC' + INTERVAL '3 hours') AS loaddate 
 
-    FROM {{ source('dbt-dimensions', 'inc_employees_stg') }} stg
-    LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension')}} final
-        ON stg.employeeid = final.employeeid 
-    WHERE final.hash_column IS NOT NULL AND final.hash_column = stg.hash_column AND final.operation != 'exp'
-        AND stg.loaddate > final.loaddate 
-)
+FROM {{ source('dbt-dimensions', 'inc_employees_stg') }} stg
+LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension')}} final
+    ON stg.employeeid = final.employeeid 
+WHERE final.hash_column IS NOT NULL AND final.hash_column = stg.hash_column AND final.operation != 'exp'
+    AND stg.loaddate > final.loaddate 
 
-SELECT * from update_old
 
 {% else %}
 

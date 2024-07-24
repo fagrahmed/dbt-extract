@@ -1,6 +1,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['clientid'],
+    depends_on=['inc_clients_stg'],
     on_schema_change='append_new_columns',
     pre_hook=[
         "{% if target.schema == 'dbt-dimensions' and source('dbt-dimensions', 'inc_clients_stg_update') is not none %}TRUNCATE TABLE {{ source('dbt-dimensions', 'inc_clients_stg_update') }};{% endif %}"
@@ -12,8 +13,8 @@
 {% set table_exists = table_exists_result.rows[0][0] if table_exists_result and table_exists_result.rows else False %}
 
 {% if table_exists %}
+--update old records (in dim)
 
-with update_old as (
     SELECT
         final.id,
         'update' AS operation,
@@ -39,9 +40,7 @@ with update_old as (
         ON stg.clientid = final.clientid 
     WHERE final.hash_column IS NOT NULL AND final.hash_column = stg.hash_column AND final.operation != 'exp'
         AND stg.loaddate > final.loaddate
-)
 
-SELECT * from update_old
 
 {% else %}
 

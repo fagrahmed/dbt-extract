@@ -2,6 +2,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['employeeid', 'employee_mobile'],
+    depends_on=['inc_employees_stg'],
     on_schema_change='append_new_columns',
     pre_hook=[
         "{% if target.schema == 'dbt-dimensions' and source('dbt-dimensions', 'inc_employees_stg_exp') is not none %}TRUNCATE TABLE {{ source('dbt-dimensions', 'inc_employees_stg_exp') }};{% endif %}"
@@ -38,7 +39,7 @@ SELECT
 FROM {{ source('dbt-dimensions', 'inc_employees_stg') }} stg
 LEFT JOIN {{ source('dbt-dimensions', 'inc_employees_dimension')}} final
     ON stg.employeeid = final.employeeid 
-WHERE stg.loaddate > final.loaddate AND final.hash_column != stg.hash_column 
+WHERE stg.loaddate > final.loaddate AND final.hash_column != stg.hash_column AND final.currentflag = true
 
 {% else %}
 

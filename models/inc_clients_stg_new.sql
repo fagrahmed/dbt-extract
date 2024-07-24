@@ -1,6 +1,7 @@
 {{ config(
     materialized='incremental',
     unique_key= ['clientid'],
+    depends_on=['inc_clients_stg'],
     on_schema_change='append_new_columns',
     pre_hook=[
         "{% if target.schema == 'dbt-dimensions' and source('dbt-dimensions', 'inc_clients_stg_new') is not none %}TRUNCATE TABLE {{ source('dbt-dimensions', 'inc_clients_stg_new') }};{% endif %}"
@@ -39,10 +40,12 @@ SELECT
 
     FROM {{source('dbt-dimensions', 'inc_clients_stg')}} stg
     LEFT JOIN {{source('dbt-dimensions', 'inc_clients_dimension')}} dim on stg.clientid = dim.clientid
-    WHERE dim.clientid is null
+    WHERE dim.clientid is null OR (dim.hash_column != stg.hash_column AND dim.currentflag = true)
 
 {% else %}
+-- dimension doesnt exists so all is new
 
+SELECT
     stg.id,  
     stg.operation,
     stg.currentflag,
